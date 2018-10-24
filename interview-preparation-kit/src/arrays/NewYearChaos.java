@@ -3,25 +3,44 @@ package arrays;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class NewYearChaos {
-  static void minimumBribes(int[] q) {
-    int allowed = 0;
-    int additional = 0;
+  static int minimumBribes(int[] q) {
+    int[] sorted = new int[q.length];
     for (int i = 0; i < q.length; i++) {
-      int move = q[i] - (i + 1);
-      if (move > 2) {
-        System.out.println("Too chaotic");
-        return;
+      if ((q[i] - (i + 1)) > 2) {
+        return -1;
       }
-      move = Math.abs(move);
-      if (move > 2) {
-        additional += move - 2;
-        move = 2;
-      }
-      allowed += move;
+      sorted[i] = i + 1;
     }
-    System.out.println(allowed / 2 + additional);
+
+    int res = 0;
+
+    for (int i = 0; i < q.length; i++) {
+      if (q[i] != sorted[i]) {
+        if (q[i] == sorted[i + 1]) {
+          bribe(sorted, i + 1, 1);
+          res += 1;
+        } else if (q[i] == sorted[i + 2]) {
+          bribe(sorted, i + 2, 2);
+          res += 2;
+        }
+      }
+    }
+
+    return res;
+  }
+
+  static void bribe(int[] q, int i, int pos) {
+    int tmp = q[i - 1];
+    q[i - 1] = q[i];
+    q[i] = tmp;
+    if (pos == 2) {
+      tmp = q[i - 2];
+      q[i - 2] = q[i - 1];
+      q[i - 1] = tmp;
+    }
   }
 
   public static void main(String[] args) throws IOException {
@@ -35,7 +54,7 @@ public class NewYearChaos {
       for (int j = 0; j < n; j++) {
         ns[j] = Integer.parseInt(nsLine[j]);
       }
-      minimumBribes(ns);
+      System.out.println(minimumBribes(ns));
     }
   }
 }
