@@ -6,7 +6,16 @@ import java.io.InputStreamReader;
 
 public class MinimumSwaps2 {
   static int minimumSwaps(int[] arr) {
-    return 0;
+    int res = 0;
+    for (int i = 0; i < arr.length; i++) {
+      while ((arr[i] - 1) != i) {
+        int tmp = arr[arr[i] - 1];
+        arr[arr[i] - 1] = arr[i];
+        arr[i] = tmp;
+        res++;
+      }
+    }
+    return res;
   }
 
   public static void main(String[] args) throws IOException {
