@@ -3,36 +3,31 @@ package dictionariesandhashmaps;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SherlockAndAnagrams {
   static int sherlockAndAnagrams(String s) {
-    Map<Character, Integer> sMap = new HashMap<>();
-    for (char c : s.toCharArray()) {
-      if (sMap.get(c) == null) {
-        sMap.put(c, 1);
-      } else {
-        sMap.put(c, sMap.get(c) + 1);
+    Map<String, Integer> sMap = new HashMap<>();
+    for (int i = 0; i < s.length(); i++) {
+      for (int j = i; j < s.length(); j++) {
+        char[] sub = s.substring(i, j + 1).toCharArray();
+        Arrays.sort(sub);
+        String key = new String(sub);
+        if (!sMap.containsKey(key)) {
+          sMap.put(key, 0);
+        }
+        sMap.put(key, sMap.get(key) + 1);
       }
     }
 
-    List<Character> repeats = new ArrayList<>();
-    for (char c : sMap.keySet()) {
-      if (sMap.get(c) > 1) {
-        repeats.add(c);
+    int res = 0;
+    for (int value : sMap.values()) {
+      if (value > 1) {
+        res += value * (value - 1) / 2;
       }
     }
 
-    if (repeats.isEmpty()) {
-      return 0;
-    }
-
-    // TODO: under construnction
-
-    return -1;
+    return res;
   }
 
   public static void main(String[] args) throws IOException {
