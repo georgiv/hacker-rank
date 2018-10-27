@@ -12,13 +12,50 @@ public class FraudulentActivityNotifications {
 
     int res = 0;
 
-    int day1 = expenditure[0];
-    int day2 = expenditure[1];
-    int day3 = expenditure[2];
+    int[] counters = new int[201];
+    for (int i = 0; i < d; i++) {
+      counters[expenditure[i]]++;
+    }
 
-    for (int i = 4; i < expenditure.length; i++) {
-      int newDay = expenditure[i];
-      
+    for (int i = d; i < expenditure.length; i++) {
+      double median = 0;
+      if(d % 2 == 1) {
+        int center = 0;
+        for(int j = 0; j < counters.length; j++) {
+          center = center + counters[j];
+
+          if(center > d/2) {
+            median = j;
+            break;
+          }
+        }
+      } else {
+        int count = 0;
+        int first = -1;
+        int second = -1;
+        for(int j = 0; j < counters.length; j++) {
+          count = count + counters[j];
+
+          if(count == d / 2) {
+            first = j;
+          } else if(count > d / 2) {
+            if(first < 0 ) {
+              first = j;
+            }
+            second = j;
+
+            median = ((double) first + (double) second) / 2;
+            break;
+          }
+        }
+      }
+
+      if (expenditure[i] >= median * 2) {
+        res++;
+      }
+
+      counters[expenditure[i - d]]--;
+      counters[expenditure[i]]++;
     }
 
     return res;
