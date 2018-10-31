@@ -1,22 +1,12 @@
 package trees;
 
+import static trees.Node.insert;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-class Node {
-  Node left;
-  Node right;
-  int data;
-
-  Node(int data) {
-    this.data = data;
-    left = null;
-    right = null;
-  }
-}
 
 public class HeightOfABinaryTree {
   public static int height(Node root) {
@@ -61,31 +51,15 @@ public class HeightOfABinaryTree {
     return Math.max(1 + traverse(root.left), 1 + traverse(root.right));
   }
 
-  public static Node insert(Node root, int data) {
-    if(root == null) {
-      return new Node(data);
-    } else {
-      Node cur;
-      if(data <= root.data) {
-        cur = insert(root.left, data);
-        root.left = cur;
-      } else {
-        cur = insert(root.right, data);
-        root.right = cur;
-      }
-      return root;
-    }
-  }
-
   public static void main(String[] args) throws IOException {
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-    int t = Integer.parseInt(in.readLine());
+    int n = Integer.parseInt(in.readLine());
 
     Node root = null;
 
     String[] nodesLine = in.readLine().split(" ");
-    for (int i = 0; i < t; i++) {
+    for (int i = 0; i < n; i++) {
       root = insert(root, Integer.parseInt(nodesLine[i]));
     }
 
