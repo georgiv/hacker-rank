@@ -20,8 +20,6 @@ public class ZigZagConversion {
       currentRow += addition;
     }
 
-    if (numRows == 1) return rowBuilders[0].toString();
-
     for (int i = 1; i < rowBuilders.length; i++) {
       rowBuilders[0].append(rowBuilders[i]);
     }
