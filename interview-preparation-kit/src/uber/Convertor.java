@@ -1,9 +1,6 @@
 package uber;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class ConversionValue {
   private String currency;
@@ -62,6 +59,38 @@ class ConversionGraph {
 
 public class Convertor {
   public double convert(ConversionGraph g, String from, String to, int units) {
-    return 0.0;
+    if (from.equals(to)) return 0.0;
+
+    Map<String, List<ConversionValue>> adjacent = g.getAdjacent();
+
+    if (!adjacent.keySet().contains(from) || !adjacent.keySet().contains(to))
+      throw new IllegalArgumentException("Conversion not possible!");
+
+    double result = 0.0;
+
+    Deque<ConversionValue> path = new ArrayDeque<>();
+    path.push(new ConversionValue(from, 0.0));
+
+    Set<String> visited = new HashSet<>();
+
+    while (!path.isEmpty()) {
+      ConversionValue cur = path.poll();
+
+      if (cur.getCurrency().equals(to)) result = cur.getRate();
+
+      visited.add(cur.getCurrency());
+
+      List<ConversionValue> values = adjacent.get(cur.getCurrency());
+      for (ConversionValue v : values) {
+        if (visited.contains(v.getCurrency())) continue;
+
+        if (cur.getRate() == 0.0) path.push(v);
+        else path.push(new ConversionValue(v.getCurrency(), cur.getRate() * v.getRate()));
+      }
+    }
+
+    if (result == 0.0) throw new IllegalArgumentException("Conversion not possible!");
+
+    return units * result;
   }
 }
